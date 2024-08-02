@@ -3,10 +3,10 @@
   "module": "index.ts",
   "type": "module",
   "bin": {
-    "oauth": "./bin/index.ts"
+    "oauth": "./app/index.ts"
   },
   "scripts": {
-    "oauth": "bun ./bin/index.ts",
+    "oauth": "bun ./app/index.ts",
     "format": "bunx @biomejs/biome format --write",
     "lint": "bunx @biomejs/biome lint --write"
   },
