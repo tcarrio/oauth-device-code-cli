@@ -1,0 +1,26 @@
+{
+  "name": "apidev",
+  "module": "index.ts",
+  "type": "module",
+  "bin": {
+    "oauth": "./bin/index.ts"
+  },
+  "scripts": {
+    "oauth": "bun ./bin/index.ts",
+    "format": "bunx @biomejs/biome format --write",
+    "lint": "bunx @biomejs/biome lint --write"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@biomejs/biome": "^1.8.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "clipboardy": "^4.0.0",
+    "ky": "^1.5.0",
+    "shumai": "^0.1.2",
+    "zod": "^3.23.8"
+  }
+}
