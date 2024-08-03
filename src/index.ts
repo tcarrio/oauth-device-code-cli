@@ -1,2 +1,1 @@
-export { OAuthAgent, OAuthClient } from "./oauth";
-export { Config } from "./config";
+export { OAuthAgent, OAuthClient, OAuthConfig } from "./oauth";
