@@ -14,17 +14,17 @@ import { WebBase64Format } from "../src/base64";
 
 export async function runAuthorizationCodeFlow(
   { logger }: RunnerDeps,
-  { logLevel, ...config }: CliArgs,
+  cliArgs: CliArgs,
 ): Promise<TokenResponse> {
   const oauthConfig = AuthorizationCodePkceFlowOAuthConfig.fromConfigLike(
-    config as any,
+    cliArgs as any,
   );
   const listenerConfig = AuthorizationCodeListenerConfig.fromCallbackUrl(
     oauthConfig.callbackUrl,
   );
-  const listener = new AuthorizationCodeListener(listenerConfig);
+  const listener = new AuthorizationCodeListener(listenerConfig, logger);
 
-  const httpClient = new KyHttpClient();
+  const httpClient = new KyHttpClient(logger);
   const randomStringGenerator = new NodeRandomStringGenerator();
   const base64 = new WebBase64Format(false);
 
@@ -41,5 +41,9 @@ export async function runAuthorizationCodeFlow(
     logger,
   );
 
-  return await agent.authenticate();
+  const auth = await agent.authenticate();
+
+  console.table(auth);
+
+  return auth;
 }

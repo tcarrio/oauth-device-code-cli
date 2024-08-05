@@ -13,7 +13,7 @@ export async function runDeviceCodeFlow(
   { logLevel, ...config }: CliArgs,
 ): Promise<TokenResponse> {
   const oauthConfig = DeviceCodeFlowOAuthConfig.fromConfigLike(config);
-  const httpClient = new KyHttpClient();
+  const httpClient = new KyHttpClient(logger);
   const client = new DeviceCodeFlowOAuthClient(oauthConfig, httpClient);
   const agent = new DeviceCodeFlowOAuthAgent(client, logger);
 

@@ -6,10 +6,14 @@ import type {
   HttpResponse,
   ResponseHttpHeaders,
 } from "./types";
+import type { Logger } from "../logger";
 
 export class KyHttpClient implements HttpClient {
+  constructor(private readonly logger: Logger) {}
+
   async post(url: string, options: HttpRequestOptions): Promise<HttpResponse> {
-    console.log(url, options);
+    this.logger.debug(url, options);
+
     return await ky.post(url, options);
   }
 }

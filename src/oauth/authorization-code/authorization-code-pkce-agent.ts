@@ -22,7 +22,7 @@ export class AuthorizationCodePkceFlowOAuthAgent {
 
     const code = await codePromise;
 
-    console.log("code", code);
+    this.logger.debug("code", code);
 
     return this.client.retrieveToken({
       code,

@@ -78,7 +78,7 @@ export class AuthorizationCodePkceFlowOAuthClient {
 
       return await response.json();
     } catch (err) {
-      console.trace(err);
+      this.logger.error("An error occurred while retrieving the token", err);
 
       throw err;
     }

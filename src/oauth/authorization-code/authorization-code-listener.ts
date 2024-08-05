@@ -1,13 +1,17 @@
 import { EventEmitter } from "node:events";
 import type { Server } from "bun";
 import type { AuthorizationCodeListenerConfig } from "./authorization-code-listener-config";
+import type { Logger } from "../../logger";
 
 export class AuthorizationCodeListener {
   private server: Server | null = null;
   private emitter = new EventEmitter();
   private readonly stateTracker: Record<string, Promise<string>> = {};
 
-  constructor(private readonly config: AuthorizationCodeListenerConfig) {}
+  constructor(
+    private readonly config: AuthorizationCodeListenerConfig,
+    private readonly logger: Logger,
+  ) {}
 
   register(state: string): Promise<string> {
     this.listen();
@@ -37,7 +41,7 @@ export class AuthorizationCodeListener {
           });
         }
 
-        console.log(`Request received @ ${request.url}`);
+        this.logger.debug(`Request received @ ${request.url}`);
 
         const code = url.searchParams.get("code");
         const state = url.searchParams.get("state");

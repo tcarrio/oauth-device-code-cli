@@ -1,6 +1,7 @@
 import shumai from "shumai";
 import type { LogLevel } from "@0xc/oauth-device-code-cli/src/logger";
 import type { EnumKey } from "@0xc/oauth-device-code-cli/src/enum";
+import { ConfigResult } from "./config";
 
 export interface CliArgs {
   clientId: string;
@@ -13,71 +14,66 @@ export interface CliArgs {
   callbackUrl?: string;
 }
 
-export function parseCliArgs(): CliArgs {
-  const clientId = new shumai.String()
+export async function parseCliArgs(): Promise<CliArgs> {
+  const { oauth, logLevel, output } = (await ConfigResult.loadDefault()).value;
+
+  const clientIdArgument = new shumai.String()
     .withName("clientId")
     .withIdentifier("client-id")
     .withShortIdentifier("i")
-    .setRequired(true)
-    .setDefault(Bun.env.OAUTH_CLIENT_ID);
+    .setDefault(Bun.env.OAUTH_CLIENT_ID ?? oauth?.clientId);
 
-  const baseUrl = new shumai.String()
+  const baseUrlArgument = new shumai.String()
     .withName("baseUrl")
     .withIdentifier("base-url")
     .withShortIdentifier("u")
-    .setRequired(true)
-    .setDefault(Bun.env.OAUTH_BASE_URL);
+    .setDefault(Bun.env.OAUTH_BASE_URL ?? oauth?.baseUrl);
 
-  const scopes = new shumai.String()
+  const scopesArgument = new shumai.String()
     .withName("scopes")
     .withIdentifier("scopes")
     .withShortIdentifier("s")
-    .setRequired(true)
-    .setDefault(Bun.env.OAUTH_SCOPES);
+    .setDefault(Bun.env.OAUTH_SCOPES ?? oauth?.scopes);
 
-  const audience = new shumai.String()
+  const audienceArgument = new shumai.String()
     .withName("audience")
     .withIdentifier("audience")
     .withShortIdentifier("a")
-    .setRequired(true)
-    .setDefault(Bun.env.OAUTH_AUDIENCE);
+    .setDefault(Bun.env.OAUTH_AUDIENCE ?? oauth?.audience);
 
-  const callbackUrl = new shumai.String()
+  const callbackUrlArgument = new shumai.String()
     .withName("callbackUrl")
     .withIdentifier("callback-url")
     .withShortIdentifier("c")
-    .setRequired(true)
-    .setDefault(Bun.env.OAUTH_CALLBACK_URL);
+    .setDefault(Bun.env.OAUTH_CALLBACK_URL ?? oauth?.callbackUrl);
 
-  const flow = new shumai.String()
+  const flowArgument = new shumai.String()
     .withName("flow")
     .withIdentifier("flow")
     .withShortIdentifier("f")
-    .setRequired(true)
-    .setDefault(Bun.env.OAUTH_FLOW ?? "device-code");
+    .setDefault(Bun.env.OAUTH_FLOW ?? oauth?.flow ?? "device-code");
 
-  const logLevel = new shumai.String()
+  const logLevelArgument = new shumai.String()
     .withName("logLevel")
     .withIdentifier("log-level")
     .withShortIdentifier("L")
-    .setRequired(true)
-    .setDefault(Bun.env.LOG_LEVEL ?? "Info");
+    .setDefault(Bun.env.LOG_LEVEL ?? logLevel ?? "Info");
 
-  const copy = new shumai.Flag()
+  const copyArgument = new shumai.Flag()
     .withName("copy")
     .withIdentifier("copy")
     .withShortIdentifier("C")
-    .setDefault(false);
+    .setDefault((Bun.env.OUTPUT_TARGET ?? output?.target) === "clipboard");
 
   const client = new shumai.Shumai([
-    clientId,
-    baseUrl,
-    scopes,
-    audience,
-    callbackUrl,
-    flow,
-    logLevel,
-    copy,
+    clientIdArgument,
+    baseUrlArgument,
+    scopesArgument,
+    audienceArgument,
+    callbackUrlArgument,
+    flowArgument,
+    logLevelArgument,
+    copyArgument,
   ]);
 
   client.parse();

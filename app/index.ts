@@ -13,7 +13,7 @@ const RUNNERS: Record<string, OAuthFlowRunner> = {
   [OAuthFlow.DeviceCode]: runDeviceCodeFlow,
 } as const;
 
-const args = parseCliArgs();
+const args = await parseCliArgs();
 
 const logger = new ConsoleLogger(LogLevel[args.logLevel]);
 const runner = RUNNERS[args.flow] ?? RUNNERS[OAuthFlow.DeviceCode];
