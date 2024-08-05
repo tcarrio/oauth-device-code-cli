@@ -2,11 +2,11 @@ import type { Logger } from "../src/logger";
 import type { TokenResponse } from "../src/oauth";
 import type { CliArgs } from "./cli";
 
-export interface Deps {
-	logger: Logger;
+export interface RunnerDeps {
+  logger: Logger;
 }
 
 export type OAuthFlowRunner = (
-	deps: Deps,
-	cliArgs: CliArgs,
+  deps: RunnerDeps,
+  cliArgs: CliArgs,
 ) => Promise<TokenResponse>;

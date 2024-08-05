@@ -6,10 +6,10 @@ import {
   DeviceCodeFlowOAuthAgent,
 } from "../src/oauth/device-code";
 import type { TokenResponse } from "../src/oauth";
-import type { Deps } from "./types";
+import type { RunnerDeps } from "./types";
 
 export async function runDeviceCodeFlow(
-  { logger }: Deps,
+  { logger }: RunnerDeps,
   { logLevel, ...config }: CliArgs,
 ): Promise<TokenResponse> {
   const oauthConfig = DeviceCodeFlowOAuthConfig.fromConfigLike(config);
