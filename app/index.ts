@@ -1,29 +1,28 @@
 #!/usr/bin/env bun
 
 import clipboard from "clipboardy";
-import {
-	OAuthAgent,
-	OAuthClient,
-	OAuthConfig,
-} from "@0xc/oauth-device-code-cli/src/oauth";
-import { ConsoleLogger, LogLevel } from "@0xc/oauth-device-code-cli/src/logger";
-import { parseCliArgs } from "./cli";
-import { KyHttpClient } from "@0xc/oauth-device-code-cli/src/http";
+import { OAuthFlow } from "@0xc/oauth-device-code-cli/src/oauth";
+import { parseCliArgs, type CliArgs } from "./cli";
+import { runDeviceCodeFlow } from "./device-code";
+import { runAuthorizationCodeFlow } from "./authorization-code";
+import { ConsoleLogger, LogLevel } from "../src/logger";
+import type { OAuthFlowRunner } from "./types";
 
-const { copy, logLevel, ...config } = parseCliArgs();
+const RUNNERS: Record<string, OAuthFlowRunner> = {
+  [OAuthFlow.AuthorizationCode]: runAuthorizationCodeFlow,
+  [OAuthFlow.DeviceCode]: runDeviceCodeFlow,
+} as const;
 
-const oauthConfig = OAuthConfig.fromConfigLike(config);
-const logger = new ConsoleLogger(LogLevel[logLevel]);
-const httpClient = new KyHttpClient();
-const client = new OAuthClient(oauthConfig, httpClient);
-const agent = new OAuthAgent(client, logger);
+const args = parseCliArgs();
 
-const code = await agent.authenticateWithDeviceCodeFlow();
+const logger = new ConsoleLogger(LogLevel[args.logLevel]);
+const runner = RUNNERS[args.flow] ?? RUNNERS[OAuthFlow.DeviceCode];
 
-if (copy) {
-	await clipboard.write(code.access_token);
+const tokenResponse = await runner({ logger }, args);
 
-	logger.info("Access token copied to clipboard");
+if (args.copy) {
+  await clipboard.write(tokenResponse.access_token);
+  logger.info("Access token copied to clipboard");
 } else {
-	logger.info(code);
+  logger.info(tokenResponse);
 }

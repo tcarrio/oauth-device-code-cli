@@ -2,23 +2,18 @@ import shumai from "shumai";
 import type { LogLevel } from "@0xc/oauth-device-code-cli/src/logger";
 import type { EnumKey } from "@0xc/oauth-device-code-cli/src/enum";
 
-interface CliArgs {
+export interface CliArgs {
 	clientId: string;
 	baseUrl: string;
 	scopes: string;
 	audience: string;
+	flow: string;
 	copy: boolean;
 	logLevel: EnumKey<typeof LogLevel>;
+	callbackUrl?: string;
 }
 
 export function parseCliArgs(): CliArgs {
-	const env = new shumai.String()
-		.withName("env")
-		.withIdentifier("env")
-		.withShortIdentifier("e")
-		.setRequired(true)
-		.setDefault(Bun.env.ENV);
-
 	const clientId = new shumai.String()
 		.withName("clientId")
 		.withIdentifier("client-id")
@@ -47,6 +42,20 @@ export function parseCliArgs(): CliArgs {
 		.setRequired(true)
 		.setDefault(Bun.env.OAUTH_AUDIENCE);
 
+	const callbackUrl = new shumai.String()
+		.withName("audience")
+		.withIdentifier("audience")
+		.withShortIdentifier("a")
+		.setRequired(true)
+		.setDefault(Bun.env.OAUTH_CALLBACK_URL);
+
+	const flow = new shumai.String()
+		.withName("flow")
+		.withIdentifier("flow")
+		.withShortIdentifier("f")
+		.setRequired(true)
+		.setDefault(Bun.env.OAUTH_FLOW ?? "device-code");
+
 	const logLevel = new shumai.String()
 		.withName("logLevel")
 		.withIdentifier("log-level")
@@ -61,11 +70,11 @@ export function parseCliArgs(): CliArgs {
 		.setDefault(false);
 
 	const client = new shumai.Shumai([
-		env,
 		clientId,
 		baseUrl,
 		scopes,
 		audience,
+		flow,
 		logLevel,
 		copy,
 	]);

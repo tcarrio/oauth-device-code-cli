@@ -2,15 +2,19 @@ import { $ } from "bun";
 import { time } from "@0xc/oauth-device-code-cli/src/time";
 import type { Logger } from "@0xc/oauth-device-code-cli/src/logger";
 
-import type { DeviceCodeResponse, OAuthClient } from "./client";
+import type {
+	DeviceCodeResponse,
+	DeviceCodeFlowOAuthClient,
+} from "./device-code-flow-client";
+import type { TokenResponse } from "../common";
 
-export class OAuthAgent {
+export class DeviceCodeFlowOAuthAgent {
 	constructor(
-		private readonly client: OAuthClient,
+		private readonly client: DeviceCodeFlowOAuthClient,
 		private readonly logger: Logger,
 	) {}
 
-	async authenticateWithDeviceCodeFlow() {
+	async authenticate(): Promise<TokenResponse> {
 		const deviceCodeResponse = await this.client.getDeviceCode();
 
 		return this.pollForAccessToken(deviceCodeResponse);
