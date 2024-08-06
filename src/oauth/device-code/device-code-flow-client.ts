@@ -44,11 +44,11 @@ export class DeviceCodeFlowOAuthClient {
     const url = `${this.config.baseUrl}/oauth/token`;
     const options: HttpRequestOptions = {
       headers: { "content-type": ContentType.Form },
-      body: new FormBody({
+      body: FormBody({
         grant_type: GrantType.DeviceCode,
         device_code: device_code,
         client_id: this.config.clientId,
-      }).toString(),
+      }),
       timeout: interval * time.Second,
     };
 

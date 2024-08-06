@@ -17,7 +17,7 @@ export async function runAuthorizationCodeFlow(
   cliArgs: CliArgs,
 ): Promise<TokenResponse> {
   const oauthConfig = AuthorizationCodePkceFlowOAuthConfig.fromConfigLike(
-    cliArgs as any,
+    cliArgs as AuthorizationCodePkceFlowOAuthConfig,
   );
   const listenerConfig = AuthorizationCodeListenerConfig.fromCallbackUrl(
     oauthConfig.callbackUrl,
@@ -42,8 +42,6 @@ export async function runAuthorizationCodeFlow(
   );
 
   const auth = await agent.authenticate();
-
-  console.table(auth);
 
   return auth;
 }
