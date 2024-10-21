@@ -80,13 +80,10 @@ export class AuthorizationCodeListener {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <script src="https://cdn.tailwindcss.com"></script>
-          <script>
-            setTimeout(() => window.close(), 3333);
-          </script>
         </head>
         <body>
           <div class="flex items-center justify-center h-screen w-screen">
-            <div>
+            <div class="space-y-4 text-center">
               <h1 class="text-3xl font-bold underline">
                 Authorization code is processing locally.
               </h1>
@@ -94,8 +91,18 @@ export class AuthorizationCodeListener {
               <h2 class="text-2xl">
                 Browser will close automatically in a few seconds...
               </h2>
+
+              <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+                onclick="window.close()"
+              >
+                Close window now
+              </button>
             </div>
           </div>
+          <script>
+            setTimeout(() => window.close(), 3333);
+          </script>
         </body>
         </html>
       `,
