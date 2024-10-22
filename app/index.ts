@@ -16,7 +16,7 @@ const RUNNERS: Record<string, OAuthFlowRunner> = {
 const args = await parseCliArgs();
 
 const logger = new ConsoleLogger(LogLevel[args.logLevel]);
-const runner = RUNNERS[args.flow] ?? RUNNERS[OAuthFlow.DeviceCode];
+const runner = RUNNERS[args.flow] ?? RUNNERS[OAuthFlow.AuthorizationCode];
 
 const tokenResponse = await runner({ logger }, args);
 
