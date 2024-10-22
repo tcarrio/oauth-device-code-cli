@@ -1,7 +1,10 @@
 import shumai from "shumai";
-import type { LogLevel } from "@0xc/oauth-device-code-cli/src/logger";
+import { LogLevel, type LogLevelType } from "@0xc/oauth-device-code-cli/src/logger";
 import type { EnumKey } from "@0xc/oauth-device-code-cli/src/enum";
 import { ConfigResult } from "./config";
+import { parseArgs } from "node:util";
+import { booleanFlag, stringFlag } from "./flags";
+import { z, ZodEnum } from "zod";
 
 export interface CliArgs {
   clientId: string;
@@ -14,7 +17,7 @@ export interface CliArgs {
   callbackUrl?: string;
 }
 
-export async function parseCliArgs(): Promise<CliArgs> {
+async function parseCliArgsWithShumai(): Promise<CliArgs> {
   const { oauth, logLevel, output } = (await ConfigResult.loadDefault()).value;
 
   const clientIdArgument = new shumai.String()
@@ -80,3 +83,51 @@ export async function parseCliArgs(): Promise<CliArgs> {
 
   return client.values;
 }
+
+type NonEmptyArray<T> = [T, ...T[]];
+
+const CliArgsSchema = z.object({
+  clientId: z.string(),
+  baseUrl: z.string(),
+  scopes: z.string(),
+  audience: z.string(),
+  flow: z.string(),
+  copy: z.boolean(),
+  logLevel: z.enum(Object.keys(LogLevel) as NonEmptyArray<EnumKey<LogLevelType>>),
+  callbackUrl: z.string().optional(),
+});
+
+async function parseCliArgsWithNodeUtil(): Promise<CliArgs> {
+  const { oauth = {}, logLevel, output } = (await ConfigResult.loadDefault()).value;
+
+  const { values } = parseArgs({
+    options: {
+      "client-id": stringFlag("i", Bun.env.OAUTH_CLIENT_ID ?? oauth.clientId),
+      "base-url": stringFlag("u", Bun.env.OAUTH_BASE_URL ?? oauth?.baseUrl),
+      "scopes": stringFlag("s", Bun.env.OAUTH_SCOPES ?? oauth?.scopes),
+      "audience": stringFlag("a", Bun.env.OAUTH_AUDIENCE ?? oauth?.audience),
+      "callback-url": stringFlag("c", Bun.env.OAUTH_CALLBACK_URL ?? oauth?.callbackUrl),
+      "flow": stringFlag("f", Bun.env.OAUTH_FLOW ?? oauth?.flow ?? "device-code"),
+      "log-level": stringFlag("L", Bun.env.LOG_LEVEL ?? logLevel ?? "Info"),
+      "copy": booleanFlag("C", (Bun.env.OUTPUT_TARGET ?? output?.target) === "clipboard"),
+    },
+    args: Bun.argv,
+    strict: true,
+    allowPositionals: true,
+    allowNegative: true,
+  });
+
+
+  return CliArgsSchema.parse({
+    clientId: values["client-id"],
+    baseUrl: values["base-url"],
+    scopes: values["scopes"],
+    audience: values["audience"],
+    callbackUrl: values["callback-url"],
+    flow: values["flow"],
+    logLevel: values["log-level"],
+    copy: values["copy"],
+  });
+}
+
+export const parseCliArgs = parseCliArgsWithNodeUtil;

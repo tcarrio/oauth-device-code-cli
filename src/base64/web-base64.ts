@@ -1,17 +1,7 @@
-export interface Base64Encoder {
-  encode(input: string): string;
-}
-
-export interface Base64Decoder {
-  decode(input: string): string;
-}
-
-export interface Base64Transformer {
-  toUrlSafe(input: string): string;
-}
+import type { Base64Decoder, Base64Encoder, UrlSafeBase64Transformer } from "./types";
 
 export class WebBase64Format
-  implements Base64Encoder, Base64Decoder, Base64Transformer
+  implements Base64Encoder, Base64Decoder, UrlSafeBase64Transformer
 {
   constructor(private readonly urlSafe: boolean) {}
 

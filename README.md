@@ -1,4 +1,4 @@
-# @0xc/oauth-device-code-cli
+# @0xc/oauth-token-cli
 
 Authentication CLI for OAuth/OIDC provider to authorize access to a resource.
 

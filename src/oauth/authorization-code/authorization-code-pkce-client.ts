@@ -6,7 +6,7 @@ import {
 } from "@0xc/oauth-device-code-cli/src/http";
 import type { TokenResponse } from "../common";
 import type { RandomStringGenerator } from "../../random";
-import type { Base64Transformer } from "../../base64";
+import type { UrlSafeBase64Transformer } from "../../base64";
 import type { Logger } from "../../logger";
 
 const GrantType = {
@@ -25,7 +25,7 @@ export class AuthorizationCodePkceFlowOAuthClient {
     private readonly httpClient: HttpClient,
     private readonly logger: Logger,
     private readonly randomStringGenerator: RandomStringGenerator,
-    private readonly base64Transformer: Base64Transformer,
+    private readonly urlSafeBase64Transformer: UrlSafeBase64Transformer,
   ) {}
 
   async getAuthorizationUrl(): Promise<AuthorizationInfo> {
@@ -85,7 +85,7 @@ export class AuthorizationCodePkceFlowOAuthClient {
   }
 
   private generateCodeVerifier() {
-    return this.base64Transformer.toUrlSafe(
+    return this.urlSafeBase64Transformer.toUrlSafe(
       this.randomStringGenerator.generate(32),
     );
   }
@@ -95,7 +95,7 @@ export class AuthorizationCodePkceFlowOAuthClient {
 
     hasher.update(codeVerifier);
 
-    return this.base64Transformer.toUrlSafe(hasher.digest().toString("base64"));
+    return this.urlSafeBase64Transformer.toUrlSafe(hasher.digest().toString("base64"));
   }
 
   private generateRandomState(): string {

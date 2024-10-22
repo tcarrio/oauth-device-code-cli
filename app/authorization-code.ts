@@ -10,7 +10,7 @@ import {
 import type { TokenResponse } from "../src/oauth";
 import type { RunnerDeps } from "./types";
 import { NodeRandomStringGenerator } from "../src/random";
-import { WebBase64Format } from "../src/base64";
+import { WebBase64Format } from "../src/base64/types";
 
 export async function runAuthorizationCodeFlow(
   { logger }: RunnerDeps,

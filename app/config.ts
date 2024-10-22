@@ -80,7 +80,7 @@ export class ConfigResult {
       throw new Error("Failed to determine root config path");
     }
 
-    let userRoot: string | null = null;
+    let userRoot: string;
     switch (platform()) {
       case "linux":
       case "freebsd":

@@ -4,9 +4,9 @@ export class AuthorizationCodeListenerConfig
   implements z.infer<(typeof AuthorizationCodeListenerConfig)["SCHEMA"]>
 {
   public static readonly SCHEMA = z.object({
-    port: z.number().int().positive().lte(65535),
-    host: z.string().default("localhost"),
-    path: z.string().default("/oauth/callback"),
+    port: z.number().int().positive().lte(65535).readonly(),
+    host: z.string().default("localhost").readonly(),
+    path: z.string().default("/oauth/callback").readonly(),
   });
 
   constructor(

@@ -1,5 +1,5 @@
 {
-  description = "@0xc/oauth-device-code-cli";
+  description = "@0xc/oauth-token-cli";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
   inputs.flake-utils.url = "github:numtide/flake-utils";
@@ -15,7 +15,7 @@
                 bun
             ];
 
-            PROJECT_NAME = "@0xc/oauth-device-code-cli";
+            PROJECT_NAME = "@0xc/oauth-token-cli";
 
             shellHook = ''
                 echo $ Started devshell for $PROJECT_NAME

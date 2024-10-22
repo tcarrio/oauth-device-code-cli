@@ -4,10 +4,10 @@ export abstract class OAuthConfig
   implements z.infer<(typeof OAuthConfig)["SCHEMA"]>
 {
   public static readonly SCHEMA = z.object({
-    clientId: z.string().min(1),
-    scopes: z.string().min(1),
-    audience: z.string().url(),
-    baseUrl: z.string().url(),
+    clientId: z.string().min(1).readonly(),
+    scopes: z.string().min(1).readonly(),
+    audience: z.string().url().readonly(),
+    baseUrl: z.string().url().readonly(),
   });
 
   constructor(
